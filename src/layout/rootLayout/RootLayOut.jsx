@@ -5,7 +5,7 @@ import Footer from "../../shere/footer/Footer";
 
 const RootLayOut = () => {
   return (
-    <div>
+    <div className="max-w-7xl mx-auto">
       <Navbar />
       <Outlet></Outlet>
       <Footer />
