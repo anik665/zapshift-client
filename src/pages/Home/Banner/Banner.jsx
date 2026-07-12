@@ -13,14 +13,9 @@ const Banner = () => {
       <Carousel autoPlay={true} infiniteLoop={true}>
         <div className="relative">
           <img src={BannerImg1} />
-          <div className="  absolute bottom-10 left-20  ">
-            <p className="text-gray-400 my-2 mt-1.5 text-start ">
-              Enjoy fast, reliable parcel delivery with real-time tracking and
-              zero hassle. <br /> From personal packages to business shipments —
-              we deliver on time, every time.
-            </p>
+          <div className="  absolute bottom-5 left-20  ">
             <div className=" flex gap-2">
-              <button className="bg-primary font-bold text-[20px]   px-4 py-2 rounded-2xl mr-2">
+              <button className="bg-primary shadow-sm font-bold text-[20px]   px-4 py-2 rounded-2xl mr-2">
                 Be track Your order
               </button>
               <button className=" bg-black text-white text-xl -ms-4 font-bold flex items-center justify-center rounded-full w-11 h-11  ">
@@ -35,13 +30,8 @@ const Banner = () => {
         <div>
           <img src={BannerImg2} />
           <div className="  absolute bottom-10 left-20  ">
-            <p className="text-gray-400 my-2 mt-1.5 text-start ">
-              Enjoy fast, reliable parcel delivery with real-time tracking and
-              zero hassle. <br /> From personal packages to business shipments —
-              we deliver on time, every time.
-            </p>
             <div className=" flex gap-2">
-              <button className="bg-primary font-bold text-[20px]   px-4 py-2 rounded-2xl mr-2">
+              <button className="bg-primary shadow-sm font-bold text-[20px]   px-4 py-2 rounded-2xl mr-2">
                 Be track Your order
               </button>
               <button className=" bg-black text-white text-xl -ms-4 font-bold flex items-center justify-center rounded-full w-11 h-11  ">
@@ -56,13 +46,8 @@ const Banner = () => {
         <div>
           <img src={BannerImg3} />
           <div className="  absolute bottom-10 left-20  ">
-            <p className="text-gray-400 my-2 mt-1.5 text-start ">
-              Enjoy fast, reliable parcel delivery with real-time tracking and
-              zero hassle. <br /> From personal packages to business shipments —
-              we deliver on time, every time.
-            </p>
             <div className=" flex gap-2">
-              <button className="bg-primary font-bold text-[20px]   px-4 py-2 rounded-2xl mr-2">
+              <button className="bg-primary shadow-sm font-bold text-[20px]   px-4 py-2 rounded-2xl mr-2">
                 Be track Your order
               </button>
               <button className=" bg-black text-white text-xl -ms-4 font-bold flex items-center justify-center rounded-full w-11 h-11  ">

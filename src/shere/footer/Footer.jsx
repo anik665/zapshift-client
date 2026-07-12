@@ -1,17 +1,47 @@
 import React from "react";
 import Logo from "../../components/logo/logo";
+import { NavLink } from "react-router";
 
 const Footer = () => {
+  const links = (
+    <>
+      <li>
+        {" "}
+        <NavLink to={"/service"}> Service </NavLink>{" "}
+      </li>
+      <li>
+        {" "}
+        <NavLink to={"/coverage"}>Coverage </NavLink>{" "}
+      </li>
+      <li>
+        {" "}
+        <NavLink to={"/about"}>About us </NavLink>{" "}
+      </li>
+      <li>
+        {" "}
+        <NavLink to={"/pricing"}> Pricing </NavLink>{" "}
+      </li>
+      <li>
+        {" "}
+        <NavLink to={"contact"}>Contact </NavLink>{" "}
+      </li>
+    </>
+  );
   return (
-    <footer className="footer footer-horizontal footer-center  text-primary-content p-10">
+    <footer className="footer bg-black footer-horizontal footer-center  text-primary-content rounded-4xl p-10">
       <aside>
         <Logo />
 
-        <p className="font-bold text-primary ">
-          ACME Industries Ltd.
-          <br />
-          Providing reliable tech since 1992
+        <p className=" text-[#DADADA] ">
+          Enjoy fast, reliable parcel delivery with real-time tracking and zero
+          hassle. From personal packages to business shipments — we deliver on
+          time, every time.
         </p>
+        <div className=" border-dashed border-r-0 border-l-0 border-[#03464D] my-4  border w-full ">
+          <div className=" grid grid-flow-col my-8 list-none text-[#dadadada] ">
+            {links}
+          </div>
+        </div>
         <p>Copyright © {new Date().getFullYear()} - All right reserved</p>
       </aside>
       <nav>

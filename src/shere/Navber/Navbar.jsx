@@ -8,23 +8,23 @@ const Navbar = () => {
     <>
       <li>
         {" "}
-        <NavLink> Service </NavLink>{" "}
+        <NavLink to={"/service"}> Service </NavLink>{" "}
       </li>
       <li>
         {" "}
-        <NavLink>Coverage </NavLink>{" "}
+        <NavLink to={"/coverage"}>Coverage </NavLink>{" "}
       </li>
       <li>
         {" "}
-        <NavLink>About us </NavLink>{" "}
+        <NavLink to={"/about"}>About us </NavLink>{" "}
       </li>
       <li>
         {" "}
-        <NavLink> Pricing </NavLink>{" "}
+        <NavLink to={"/pricing"}> Pricing </NavLink>{" "}
       </li>
       <li>
         {" "}
-        <NavLink>Contact </NavLink>{" "}
+        <NavLink to={"contact"}>Contact </NavLink>{" "}
       </li>
     </>
   );
@@ -65,15 +65,17 @@ const Navbar = () => {
       </div>
       <div className="navbar-end flex items-center gap-2 ">
         <div className=" flex gap-2">
-          <button className=" bg-white text-[20px] font-bold p-4 shadow-gray-900 sh rounded">
+          <button className=" bg-white border-gray-700  text-[20px] font-bold px-4 lg:px-8 py-2 lg:py-4  shadow-lg   rounded-lg">
             Sign In
           </button>
-          <button className="bg-primary font-bold text-[20px]   px-4 py-2 rounded-2xl mr-2">
-            Sign Up
-          </button>
-          <button className=" bg-black text-white text-xl -ms-4 font-bold flex items-center justify-center rounded-full w-11 h-11  ">
-            <MdArrowOutward />
-          </button>
+          <div className="flex gap-2 items-end">
+            <button className="bg-primary font-bold text-[20px]   px-4 lg:px-8 py-2 lg:py-4  rounded-lg mr-2">
+              Sign Up
+            </button>
+            <button className=" bg-black text-[#ffffff] text-xl -ms-3.5  flex items-center justify-center rounded-full w-11 h-11  ">
+              <MdArrowOutward className=" text-3xl  " />
+            </button>
+          </div>
         </div>
       </div>
     </div>
