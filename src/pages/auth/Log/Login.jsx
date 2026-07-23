@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import useAuth from "../../../hooks/useAuth";
 
 const Login = () => {
@@ -11,6 +11,11 @@ const Login = () => {
   } = useForm();
 
   const { signIn, googleSignIn } = useAuth();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state || "/";
+  console.log(from);
 
   const onSubmit = (data) => {
     console.log(data);
@@ -26,6 +31,7 @@ const Login = () => {
       .then((res) => {
         console.log(res.user);
         alert("Your SignIn Is Complete");
+        navigate(from);
       })
       .catch((err) => {
         console.log(err.message);
@@ -34,6 +40,8 @@ const Login = () => {
   };
 
   // console.log(watch()); // watch input value by passing the name of it
+  console.log("Clude name ", import.meta.env.VITE_CLOUDINARY_CLOUD_NAME);
+  console.log(import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
 
   return (
     <div className="mt-7 pt-2 card bg-base-100 rounded shrink-0 mx-auto max-w-sm w-full shadow-2xl  ">
@@ -84,6 +92,7 @@ const Login = () => {
         <p className=" text-center text-gray-300">or</p>
 
         <button
+          type="button"
           onClick={GoogleSignIn}
           className="btn w-full bg-white text-black border-[#e5e5e5]"
         >

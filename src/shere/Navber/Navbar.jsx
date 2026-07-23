@@ -2,8 +2,19 @@ import React from "react";
 import Logo from "../../components/logo/logo";
 import { Link, NavLink } from "react-router";
 import { MdArrowOutward } from "react-icons/md";
+import useAuth from "../../hooks/useAuth";
 
 const Navbar = () => {
+  const { user, loading, Logout } = useAuth();
+  // console.log(user, loading);
+  const handelLogOut = () => {
+    Logout()
+      .then((res) => {
+        alert("Logout SuccessFull");
+      })
+      .catch((err) => console.log(err.message));
+  };
+
   const links = (
     <>
       <li>
@@ -65,17 +76,46 @@ const Navbar = () => {
       </div>
       <div className="navbar-end flex items-center gap-2 ">
         <div className=" flex gap-2">
-          <button className=" bg-white border-gray-700  text-[20px] font-bold px-4 lg:px-8 py-2 lg:py-4  shadow-lg   rounded-lg">
-            Sign In
-          </button>
-          <div className="flex gap-2 items-end">
-            <button className="bg-primary font-bold text-[20px]   px-4 lg:px-8 py-2 lg:py-4  rounded-lg mr-2">
-              Sign Up
-            </button>
-            <button className=" bg-black text-[#ffffff] text-xl -ms-3.5  flex items-center justify-center rounded-full w-11 h-11  ">
-              <MdArrowOutward className=" text-3xl  " />
-            </button>
-          </div>
+          {user ? (
+            <>
+              <button
+                onClick={handelLogOut}
+                className=" bg-white border-gray-700  text-[20px] font-bold px-4 lg:px-8 py-2 lg:py-4  shadow-lg   rounded-lg"
+              >
+                Sign Out
+              </button>
+              <div className="flex gap-2 items-end">
+                <Link className="bg-primary font-bold text-[20px]   px-4 lg:px-8 py-2 lg:py-4  rounded-lg mr-2">
+                  Be a rider
+                </Link>
+
+                <button className=" bg-black text-[#ffffff] text-xl -ms-3.5  flex items-center justify-center rounded-full w-11 h-11  ">
+                  <MdArrowOutward className=" text-3xl  " />
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <Link
+                to={"/login"}
+                className=" bg-white border-gray-700  text-[20px] font-bold px-4 lg:px-8 py-2 lg:py-4  shadow-lg   rounded-lg"
+              >
+                Sign In
+              </Link>
+              <div className="flex gap-2 items-end">
+                <Link
+                  to={"/register"}
+                  className="bg-primary font-bold text-[20px]   px-4 lg:px-8 py-2 lg:py-4  rounded-lg mr-2"
+                >
+                  Sign Up
+                </Link>
+
+                <button className=" bg-black text-[#ffffff] text-xl -ms-3.5  flex items-center justify-center rounded-full w-11 h-11  ">
+                  <MdArrowOutward className=" text-3xl  " />
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

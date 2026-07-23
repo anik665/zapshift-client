@@ -2,21 +2,35 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
 import useAuth from "../../../hooks/useAuth";
+import UploadImage from "../../../utils/UploadImage";
 
 const Register = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
 
-  const { registerUser } = useAuth();
+  const { registerUser, UpdateProfile, user } = useAuth();
+  console.log(user);
 
-  const onSubmit = (data) => {
-    // console.log(data.email, data.password);
+  const onSubmit = async (data) => {
+    console.log(data.photo[0].name);
+    const ImageFile = data.photo[0];
+    const ImageUrl = await UploadImage(ImageFile);
+    console.log("The image Url is ", ImageUrl);
+
     registerUser(data.email, data.password)
-      .then((result) => console.log(result.user))
+      .then(async (result) => {
+        console.log("after registration", result);
+        await UpdateProfile(
+          {
+            displayName: data.name,
+            photoURL: ImageUrl,
+          },
+          console.log("Profile updated"),
+        );
+      })
       .catch((err) => console.log(err.message));
   };
 
@@ -29,6 +43,7 @@ const Register = () => {
       <form className=" card-body" onSubmit={handleSubmit(onSubmit)}>
         {/* register your input into the hook by invoking the "register" function */}
         <fieldset className="fieldset">
+          {/* name field  */}
           <label className="label font-bold  ">Name</label>
           <input
             type="text"
@@ -37,6 +52,20 @@ const Register = () => {
             {...register("name", { required: "Name is required" })}
           />
           {errors.name && <p className="text-red-700">{errors.name.message}</p>}
+
+          {/* photo field  */}
+
+          <label className="label font-bold  ">Photo</label>
+          <input
+            type="file"
+            className="file-input"
+            placeholder="name"
+            {...register("photo", { required: "Name is required" })}
+          />
+          {errors.photo && (
+            <p className="text-red-700">{errors.photo.message}</p>
+          )}
+
           <label className="label font-bold  ">Email</label>
           <input
             type="email"

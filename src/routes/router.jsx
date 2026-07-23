@@ -6,6 +6,7 @@ import AuthLayout from "../layout/AuthLayout/AuthLayout";
 import Login from "../pages/auth/Log/Login";
 import { Component } from "react";
 import Register from "../pages/auth/res/Register";
+import PrivateRoute from "../Private/PrivateRoute";
 
 export const router = createBrowserRouter([
   {
@@ -15,7 +16,11 @@ export const router = createBrowserRouter([
       { index: true, Component: Home },
       {
         path: "coverage",
-        Component: Coverage,
+        element: (
+          <PrivateRoute>
+            <Coverage />
+          </PrivateRoute>
+        ),
         loader: () => fetch("/coverage.json").then((res) => res.json()),
       },
     ],
