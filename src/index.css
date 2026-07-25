@@ -9,7 +9,11 @@
   default: true;
   --color-primary: #caeb66;
   --color-secondary: #03373d;
+}
+@theme {
   --color-grays: #606060;
+  --color-blue10: #03373d;
+  --colot-slate900: #0f172a;
 }
 
 body {

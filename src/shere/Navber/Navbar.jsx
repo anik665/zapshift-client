@@ -31,6 +31,10 @@ const Navbar = () => {
       </li>
       <li>
         {" "}
+        <NavLink to={"/sendParcel"}>Send-Parcel</NavLink>{" "}
+      </li>
+      <li>
+        {" "}
         <NavLink to={"/pricing"}> Pricing </NavLink>{" "}
       </li>
       <li>

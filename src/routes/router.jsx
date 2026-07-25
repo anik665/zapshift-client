@@ -7,6 +7,7 @@ import Login from "../pages/auth/Log/Login";
 import { Component } from "react";
 import Register from "../pages/auth/res/Register";
 import PrivateRoute from "../Private/PrivateRoute";
+import SendParcel from "../pages/sendParcel/SendParcel";
 
 export const router = createBrowserRouter([
   {
@@ -22,6 +23,14 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ),
         loader: () => fetch("/coverage.json").then((res) => res.json()),
+      },
+      {
+        path: "/sendParcel",
+        element: (
+          <PrivateRoute>
+            <SendParcel />
+          </PrivateRoute>
+        ),
       },
     ],
   },
