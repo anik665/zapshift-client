@@ -1,12 +1,50 @@
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
+import { useLoaderData } from "react-router";
 
 const SendParcel = () => {
   const {
     handleSubmit,
     register,
+    watch,
+    control,
     formState: { errors },
   } = useForm();
+
+  //data
+  const serviceCenter = useLoaderData();
+  // console.log(information.map((district) => district.district));
+
+  const duplicateRegions = serviceCenter.map((r) => r.region);
+  const region = [...new Set(duplicateRegions)]; //return regins array without duplicate
+
+  //watch the live region
+
+  const senderRegion = useWatch({ control, name: "senderRegion" });
+  const recevierRegion = useWatch({ control, name: "reciverRegioin" });
+  console.log(recevierRegion);
+  console.log(senderRegion);
+
+  // const districtregion = (region) => {
+  //   const regionDistrict = serviceCenter.filter((c) => c.region === region);
+  //   console.log(regionDistrict);
+  //   const district = regionDistrict.map((d) => d.district);
+  //   const coverArea = regionDistrict.map((a) => a.covered_area);
+  //   const area = coverArea.flatMap((r) => r);
+  //   console.log(area.map((r) => r));
+  //   return { district, coverArea };
+  // };
+  const districtregion = (region) => {
+    const regionDistrict = serviceCenter.filter((r) => r.region === region);
+    const district = regionDistrict.map((d) => d.district);
+    const coverArea = regionDistrict.map((a) => a.covered_area);
+    //   const area = coverArea.flatMap((r) => r);
+    return { district, coverArea };
+  };
+  const { district } = districtregion(senderRegion);
+  console.log(district);
+  const { district: receviorDistrict } = districtregion(recevierRegion);
+  console.log(receviorDistrict);
 
   const handleSendParcel = (data) => {
     console.log(data);
@@ -133,7 +171,6 @@ const SendParcel = () => {
               <label className="label mt-4 mb-1 text-slate-900 font-medium">
                 Sender Name
               </label>
-
               <input
                 type="text"
                 {...register("senderName", {
@@ -142,16 +179,13 @@ const SendParcel = () => {
                 className="input w-full"
                 placeholder="Sender Name"
               />
-
               {errors.senderName && (
                 <p className="text-red-500">{errors.senderName.message}</p>
               )}
-
               {/* Sender Address */}
               <label className="label mt-4 mb-1 text-slate-900 font-medium">
                 Sender Address
               </label>
-
               <input
                 type="text"
                 {...register("senderAddress", {
@@ -160,16 +194,13 @@ const SendParcel = () => {
                 className="input w-full"
                 placeholder="Sender Address"
               />
-
               {errors.senderAddress && (
                 <p className="text-red-500">{errors.senderAddress.message}</p>
               )}
-
               {/* Sender Phone */}
               <label className="label mt-4 mb-1 text-slate-900 font-medium">
                 Sender Phone No
               </label>
-
               <input
                 type="tel"
                 {...register("senderPhone", {
@@ -178,16 +209,35 @@ const SendParcel = () => {
                 className="input w-full"
                 placeholder="Sender Phone Number"
               />
-
               {errors.senderPhone && (
                 <p className="text-red-500">{errors.senderPhone.message}</p>
               )}
-
+              {/* sender region */}
+              <label className="label mt-4 mb-1 text-slate-900 font-medium">
+                Your Region
+              </label>
+              <select
+                defaultValue=""
+                className="select w-full"
+                {...register("senderRegion", {
+                  required: "Please select your regions",
+                })}
+              >
+                {/* ❌ তোমার আগের code-এ "Pick a color" ছিল।
+                    এখানে district-এর জন্য proper placeholder দেওয়া হয়েছে। */}
+                {region.map((r) => (
+                  <option className="text-black " value={r}>
+                    {r}
+                  </option>
+                ))}
+                {/* <option defaultValue={"pick a region"}>
+                  pick a regin time is{" "}
+                </option> */}
+              </select>
               {/* Sender District */}
               <label className="label mt-4 mb-1 text-slate-900 font-medium">
                 Your District
               </label>
-
               <select
                 defaultValue=""
                 className="select w-full"
@@ -197,26 +247,37 @@ const SendParcel = () => {
               >
                 {/* ❌ তোমার আগের code-এ "Pick a color" ছিল।
                     এখানে district-এর জন্য proper placeholder দেওয়া হয়েছে। */}
-
-                <option value="" disabled>
-                  Select Your District
-                </option>
-
-                <option value="Dhaka">Dhaka</option>
-                <option value="Sirajganj">Sirajganj</option>
-                <option value="Rajshahi">Rajshahi</option>
-                <option value="Chattogram">Chattogram</option>
+                {district.map((district) => (
+                  <option value={district}>{district}</option>
+                ))}
+                {/* <option  defaultValue={"pick a region"}>
+                  pick a regin
+                </option> */}
               </select>
-
               {errors.senderDistrict && (
                 <p className="text-red-500">{errors.senderDistrict.message}</p>
               )}
+              {/* <select
+                {...register("coveredArea", {
+                  required: "Please select a covered area",
+                })}
+                className="select w-full"
+              >
+                <option value="">Select Covered Area</option>
 
+                {coverArea.map((area) => (
+                  <option key={area} value={area}>
+                    {area}
+                  </option>
+                ))}
+              </select> */}
+              {/* {errors.coveredArea && (
+                <p className="text-red-500">{errors.coveredArea.message}</p>
+              )} */}
               {/* Pickup Instruction */}
               <label className="label mt-4 mb-1 text-slate-900 font-medium">
                 Pickup Instruction
               </label>
-
               <textarea
                 {...register("pickupInstruction")}
                 placeholder="Pickup Instruction"
@@ -289,6 +350,21 @@ const SendParcel = () => {
                 <p className="text-red-500">{errors.receiverPhone.message}</p>
               )}
 
+              {/* Recevir region */}
+              <lable className="label mt-4 mb-1 text-slate-900 font-medium">
+                Recevier Region
+              </lable>
+              <select
+                className="select w-full"
+                {...register("reciverRegioin", {
+                  required: "Please select reciver regioin",
+                })}
+              >
+                {region.map((r) => (
+                  <option>{r}</option>
+                ))}
+              </select>
+
               {/* Receiver District */}
               <label className="label mt-4 mb-1 text-slate-900 font-medium">
                 Receiver District
@@ -301,14 +377,12 @@ const SendParcel = () => {
                   required: "Please select receiver district",
                 })}
               >
-                <option value="" disabled>
-                  Select Receiver District
-                </option>
-
-                <option value="Dhaka">Dhaka</option>
-                <option value="Sirajganj">Sirajganj</option>
-                <option value="Rajshahi">Rajshahi</option>
-                <option value="Chattogram">Chattogram</option>
+                {/* {information.map((district) => (
+                  <option value={district.district}>{district.district}</option>
+                ))} */}
+                {receviorDistrict.map((d) => (
+                  <option>{d}</option>
+                ))}
               </select>
 
               {errors.receiverDistrict && (
