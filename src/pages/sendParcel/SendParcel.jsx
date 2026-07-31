@@ -1,6 +1,9 @@
 import React from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useLoaderData } from "react-router";
+import Swal from "sweetalert2";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useAuth from "../../hooks/useAuth";
 
 const SendParcel = () => {
   const {
@@ -14,16 +17,18 @@ const SendParcel = () => {
   //data
   const serviceCenter = useLoaderData();
   // console.log(information.map((district) => district.district));
+  const { user } = useAuth();
+  console.log(user);
 
   const duplicateRegions = serviceCenter.map((r) => r.region);
   const region = [...new Set(duplicateRegions)]; //return regins array without duplicate
 
   //watch the live region
+  const axiosSecure = useAxiosSecure();
 
   const senderRegion = useWatch({ control, name: "senderRegion" });
   const recevierRegion = useWatch({ control, name: "reciverRegioin" });
-  console.log(recevierRegion);
-  console.log(senderRegion);
+  //
 
   // const districtregion = (region) => {
   //   const regionDistrict = serviceCenter.filter((c) => c.region === region);
@@ -47,20 +52,91 @@ const SendParcel = () => {
   // coverArea
   const coverArea = (district) => {
     const coverDistrict = serviceCenter.filter((d) => d.district === district);
-    console.log(coverDistrict, "this is coverArea ddd");
+    // console.log(coverDistrict, "this is coverArea ddd");
     const area = coverDistrict.flatMap((c) => c.covered_area);
-    console.log(area);
+    // console.log(area);
     return area;
   };
   const area = coverArea(senderDistrict);
-  console.log("this is the area", area);
+  // console.log("this is the area", area);
   const { district } = districtregion(senderRegion);
-  console.log(district);
+  // console.log(district);
   const { district: receviorDistrict } = districtregion(recevierRegion);
-  console.log(receviorDistrict);
+  // console.log(receviorDistrict);
 
   const handleSendParcel = (data) => {
-    console.log(data);
+    const isSameDistrict = data.senderDistrict === data.receiverDistrict;
+
+    const isDocument = data.parcelType === "document";
+
+    const parcelWeight = parseFloat(data.parcelWeight);
+
+    let cost = 0;
+
+    // Check if parcel weight is valid
+    if (isNaN(parcelWeight) || parcelWeight <= 0) {
+      Swal.fire({
+        title: "Invalid Weight",
+        text: "Please enter a valid parcel weight.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+
+    // Document pricing
+    if (isDocument) {
+      cost = isSameDistrict ? 60 : 80;
+    }
+
+    // Non-document pricing
+    else {
+      if (parcelWeight < 3) {
+        cost = isSameDistrict ? 110 : 150;
+      } else {
+        const minimumCharge = isSameDistrict ? 110 : 150;
+
+        const extraWeight = parcelWeight - 3;
+
+        const extraCharge = isSameDistrict
+          ? extraWeight * 40
+          : extraWeight * 40 + 40;
+
+        cost = minimumCharge + extraCharge;
+      }
+    }
+
+    // Confirmation Alert
+    Swal.fire({
+      title: "Confirm Your Booking",
+      text: `Your parcel delivery charge is ৳${cost}. Do you want to proceed?`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Confirm Booking",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Booking Confirmed!",
+          text: `Your parcel booking has been confirmed. Delivery charge: ৳${cost}`,
+          icon: "success",
+          confirmButtonText: "Continue",
+        });
+
+        axiosSecure
+          .post("/parcel", data)
+          .then((res) => console.log("after save the database", res));
+
+        // এখানে পরবর্তীতে booking/payment API call করতে পারবে
+        console.log("Confirmed Data:", data);
+        console.log("Final Cost:", cost);
+      }
+    });
+
+    console.log("Cost:", cost);
+    console.log("Form Data:", data);
   };
 
   return (
@@ -185,6 +261,7 @@ const SendParcel = () => {
                 Sender Name
               </label>
               <input
+                defaultValue={user?.displayName}
                 type="text"
                 {...register("senderName", {
                   required: "Sender Name is required",
@@ -195,6 +272,19 @@ const SendParcel = () => {
               {errors.senderName && (
                 <p className="text-red-500">{errors.senderName.message}</p>
               )}
+              {/* //sender email */}
+              <label className="label mt-4 mb-1 text-slate-900 font-medium">
+                Sender Email
+              </label>
+              <input
+                defaultValue={user.email}
+                type="email"
+                {...register("senderEmail", {
+                  required: "Sender Email",
+                })}
+                className="input w-full"
+                placeholder="Sender Email"
+              />
               {/* Sender Address */}
               <label className="label mt-4 mb-1 text-slate-900 font-medium">
                 Sender Address
@@ -279,11 +369,9 @@ const SendParcel = () => {
                 })}
                 className="select w-full"
               >
-                <option value="">Select Covered Area</option>
-
-                {area.map((area) => (
-                  <option key={area} value={area}>
-                    {area}
+                {area.map((a) => (
+                  <option key={a} value={a}>
+                    {a}
                   </option>
                 ))}
               </select>
