@@ -41,6 +41,19 @@ const SendParcel = () => {
     //   const area = coverArea.flatMap((r) => r);
     return { district, coverArea };
   };
+
+  const senderDistrict = useWatch({ control, name: "senderDistrict" });
+
+  // coverArea
+  const coverArea = (district) => {
+    const coverDistrict = serviceCenter.filter((d) => d.district === district);
+    console.log(coverDistrict, "this is coverArea ddd");
+    const area = coverDistrict.flatMap((c) => c.covered_area);
+    console.log(area);
+    return area;
+  };
+  const area = coverArea(senderDistrict);
+  console.log("this is the area", area);
   const { district } = districtregion(senderRegion);
   console.log(district);
   const { district: receviorDistrict } = districtregion(recevierRegion);
@@ -257,7 +270,10 @@ const SendParcel = () => {
               {errors.senderDistrict && (
                 <p className="text-red-500">{errors.senderDistrict.message}</p>
               )}
-              {/* <select
+              <label className="label mt-4 mb-1 text-slate-900 font-medium">
+                Sender Thana
+              </label>
+              <select
                 {...register("coveredArea", {
                   required: "Please select a covered area",
                 })}
@@ -265,15 +281,15 @@ const SendParcel = () => {
               >
                 <option value="">Select Covered Area</option>
 
-                {coverArea.map((area) => (
+                {area.map((area) => (
                   <option key={area} value={area}>
                     {area}
                   </option>
                 ))}
-              </select> */}
-              {/* {errors.coveredArea && (
+              </select>
+              {errors.coveredArea && (
                 <p className="text-red-500">{errors.coveredArea.message}</p>
-              )} */}
+              )}
               {/* Pickup Instruction */}
               <label className="label mt-4 mb-1 text-slate-900 font-medium">
                 Pickup Instruction
