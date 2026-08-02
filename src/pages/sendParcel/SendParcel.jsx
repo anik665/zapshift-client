@@ -124,6 +124,7 @@ const SendParcel = () => {
           icon: "success",
           confirmButtonText: "Continue",
         });
+        data.cost = cost;
 
         axiosSecure
           .post("/parcel", data)
