@@ -51,6 +51,21 @@ const My_Parcel = () => {
     });
   };
 
+  const handelPayment = async (parcel) => {
+    console.log(parcel);
+    const paymentInfo = {
+      cost: parcel?.cost,
+      parcelName: parcel?.parcelName,
+      senderEmail: parcel?.senderEmail,
+      parcelId: parcel?._id,
+    };
+    const res = await axiosSecure.post("/payment-cheakout-session", {
+      paymentInfo,
+    });
+    console.log(res.data);
+    window.location.href = res.data.url;
+  };
+
   return (
     <div>
       <h1 className="text-center font-bold">
@@ -81,7 +96,17 @@ const My_Parcel = () => {
                   {p.paymentStatuse === "paid" ? (
                     <span className="text-green-400">Paid</span>
                   ) : (
-                    <Link to={`/dashbord/payment${p._id}`}>Pay</Link>
+                    // <Link to={`/dashbord/payment/${p._id}`}>
+                    //   <button className="btn btn-primary text-black">
+                    //     Pay
+                    //   </button>
+                    // </Link>
+                    <button
+                      onClick={() => handelPayment(p)}
+                      className="btn btn-primary text-black"
+                    >
+                      Pay{" "}
+                    </button>
                   )}
                 </td>
                 <td>

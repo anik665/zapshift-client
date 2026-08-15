@@ -10,7 +10,10 @@ import PrivateRoute from "../Private/PrivateRoute";
 import SendParcel from "../pages/sendParcel/SendParcel";
 import DashbordLayout from "../layout/DashbordLayout/DashbordLayout";
 import My_Parcel from "../pages/Dashbords/My_parcel/My_Parcel";
-import Payment from "../pages/Dashbords/My_parcel/Payment/Payment";
+import Payment from "../pages/Dashbords/Payment/Payment";
+import PaymentSuccess from "../pages/Dashbords/Payment/PaymentSuccess";
+import PaymentCancel from "../pages/Dashbords/Payment/PaymentCancel";
+import AboutUs from "../pages/About/AboutUs";
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +39,7 @@ export const router = createBrowserRouter([
         ),
         loader: () => fetch("/coverage.json").then((res) => res.json()),
       },
+      { path: "about", Component: AboutUs },
     ],
   },
   {
@@ -62,7 +66,9 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
-      { path: "payment", Component: Payment },
+      { path: "payment/:ParcelId", Component: Payment },
+      { path: "payment-success", Component: PaymentSuccess },
+      { path: "payment-cancel", Component: PaymentCancel },
     ],
   },
 ]);
