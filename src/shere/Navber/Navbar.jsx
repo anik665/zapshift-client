@@ -80,7 +80,7 @@ const Navbar = () => {
         <Logo />
       </div>
       <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal text-[#606060] font-medium px-1">
+        <ul className="menu menu-horizontal text-grays font-medium px-1">
           {links}
         </ul>
       </div>
@@ -95,7 +95,10 @@ const Navbar = () => {
                 Sign Out
               </button>
               <div className="flex gap-2 items-end">
-                <Link className="bg-primary font-bold text-[20px]   px-4 lg:px-8 py-2 lg:py-4  rounded-lg mr-2">
+                <Link
+                  to={"/rider"}
+                  className="bg-primary font-bold text-[20px]   px-4 lg:px-8 py-2 lg:py-4  rounded-lg mr-2"
+                >
                   Be a rider
                 </Link>
 

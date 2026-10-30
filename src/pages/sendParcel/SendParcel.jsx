@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuth from "../../hooks/useAuth";
@@ -13,6 +13,7 @@ const SendParcel = () => {
     control,
     formState: { errors },
   } = useForm();
+  const navigate = useNavigate();
 
   //data
   const serviceCenter = useLoaderData();
@@ -126,11 +127,20 @@ const SendParcel = () => {
         });
         data.cost = cost;
 
-        axiosSecure
-          .post("/parcel", data)
-          .then((res) => console.log("after save the database", res));
+        axiosSecure.post("/parcel", data).then((res) => {
+          console.log("after save the database", res);
+          if (res.data.insertedId) {
+            Swal.fire({
+              title: "Booking Confiremed please pay",
+              text: `Your parcel booking has been confirmed. Delivery charge: ${cost}`,
+              icon: "success",
+              confirmButtonText: "Contunre",
+            });
+            navigate("/dashbord/my-parcel");
+          }
+        });
 
-        // এখানে পরবর্তীতে booking/payment API call করতে পারবে
+        // এখানে পরবর্তীতে booking/payment API call করতে পারব
         console.log("Confirmed Data:", data);
         console.log("Final Cost:", cost);
       }
@@ -321,16 +331,18 @@ const SendParcel = () => {
                 Your Region
               </label>
               <select
-                defaultValue=""
+                defaultValue={"Pick a Region"}
                 className="select w-full"
                 {...register("senderRegion", {
                   required: "Please select your regions",
                 })}
               >
-                {/* ❌ তোমার আগের code-এ "Pick a color" ছিল।
-                    এখানে district-এর জন্য proper placeholder দেওয়া হয়েছে। */}
-                {region.map((r) => (
-                  <option className="text-black " value={r}>
+                {region?.map((r, index) => (
+                  <option
+                    key={index}
+                    className="text-black font-bold "
+                    value={r}
+                  >
                     {r}
                   </option>
                 ))}
@@ -343,7 +355,7 @@ const SendParcel = () => {
                 Your District
               </label>
               <select
-                defaultValue=""
+                defaultValue="Dhaka"
                 className="select w-full"
                 {...register("senderDistrict", {
                   required: "Please select your district",
@@ -351,8 +363,10 @@ const SendParcel = () => {
               >
                 {/* ❌ তোমার আগের code-এ "Pick a color" ছিল।
                     এখানে district-এর জন্য proper placeholder দেওয়া হয়েছে। */}
-                {district.map((district) => (
-                  <option value={district}>{district}</option>
+                {district?.map((district, index) => (
+                  <option key={index} value={district}>
+                    {district}
+                  </option>
                 ))}
                 {/* <option  defaultValue={"pick a region"}>
                   pick a regin

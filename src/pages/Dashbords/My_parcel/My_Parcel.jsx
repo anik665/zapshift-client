@@ -63,7 +63,7 @@ const My_Parcel = () => {
       paymentInfo,
     });
     console.log(res.data);
-    window.location.href = res.data.url;
+    window.location.assign(res.data.url);
   };
 
   return (
@@ -93,19 +93,16 @@ const My_Parcel = () => {
                 <td>{p.cost}</td>
                 <td>{p.createdAt}</td>
                 <td>
-                  {p.paymentStatuse === "paid" ? (
-                    <span className="text-green-400">Paid</span>
+                  {p?.paymentStatus === "paid" ? (
+                    <span className="font-medium text-green-500">Paid</span>
                   ) : (
-                    // <Link to={`/dashbord/payment/${p._id}`}>
-                    //   <button className="btn btn-primary text-black">
-                    //     Pay
-                    //   </button>
-                    // </Link>
                     <button
+                      type="button"
                       onClick={() => handelPayment(p)}
-                      className="btn btn-primary text-black"
+                      className="btn bg-primary text-black hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+                      aria-label={`Pay for parcel ${p?._id}`}
                     >
-                      Pay{" "}
+                      Pay Now
                     </button>
                   )}
                 </td>

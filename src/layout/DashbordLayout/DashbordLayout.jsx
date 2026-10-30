@@ -2,6 +2,7 @@ import React from "react";
 import { Link, Outlet } from "react-router";
 import My_Parcel from "../../pages/Dashbords/My_parcel/My_Parcel";
 import Logo from "../../components/logo/logo";
+import { MdOutlinePayment } from "react-icons/md";
 
 const DashbordLayout = () => {
   return (
@@ -75,6 +76,20 @@ const DashbordLayout = () => {
                     <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                   </svg>
                   <span className="is-drawer-close:hidden">Homepage</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to={"/dashbord/payment-history"}
+                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  data-tip="Payment History"
+                >
+                  {/* Payment History icon */}
+
+                  <MdOutlinePayment />
+                  <span className="is-drawer-close:hidden">
+                    Payment History
+                  </span>
                 </Link>
               </li>
 
