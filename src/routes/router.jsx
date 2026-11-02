@@ -51,6 +51,7 @@ export const router = createBrowserRouter([
             <BeArider />
           </PrivateRoute>
         ),
+        loader: () => fetch("/coverage.json").then((res) => res.json()),
       },
       { path: "service", Component: Service },
       { path: "contact", Component: Contact },

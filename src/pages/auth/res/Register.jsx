@@ -1,8 +1,9 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import useAuth from "../../../hooks/useAuth";
 import UploadImage from "../../../utils/UploadImage";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const Register = () => {
   const {
@@ -11,27 +12,77 @@ const Register = () => {
     formState: { errors },
   } = useForm();
 
-  const { registerUser, UpdateProfile, user } = useAuth();
-  console.log(user);
+  const axiosSecure = useAxiosSecure();
 
+  const { registerUser, UpdateProfile, googleSignIn } = useAuth();
+  const navigate = useNavigate();
+
+  /**
+   * Handles traditional email/password user registration flow.
+   */
   const onSubmit = async (data) => {
-    console.log(data.photo[0].name);
-    const ImageFile = data.photo[0];
-    const ImageUrl = await UploadImage(ImageFile);
-    console.log("The image Url is ", ImageUrl);
+    try {
+      // 1. Upload user profile image to the cloud storage/hosting service
+      const imageFile = data.photo[0];
+      const imageUrl = await UploadImage(imageFile);
 
-    registerUser(data.email, data.password)
-      .then(async (result) => {
-        console.log("after registration", result);
-        await UpdateProfile(
-          {
-            displayName: data.name,
-            photoURL: ImageUrl,
-          },
-          console.log("Profile updated"),
-        );
-      })
-      .catch((err) => console.log(err.message));
+      // 2. Register user credentials with Firebase Authentication
+      await registerUser(data.email, data.password);
+
+      // 3. Update Firebase user profile with display name and photo URL
+      await UpdateProfile({
+        displayName: data.name,
+        photoURL: imageUrl,
+      });
+
+      // 4. Construct user payload for database persistence
+      const userInfo = {
+        email: data.email,
+        displayName: data.name,
+        photoURL: imageUrl,
+      };
+
+      // 5. Send user information to the backend server
+      const res = await axiosSecure.post("/users", userInfo);
+
+      // 6. Log response status and redirect to home page on success
+      if (res.data.insertedId || res.data.exists) {
+        console.log("Success:", res.data.message);
+        navigate("/");
+      }
+    } catch (err) {
+      console.error("User registration process failed:", err.message);
+    }
+  };
+
+  /**
+   * Handles Google Social Authentication popup
+   * and syncs the authenticated user data with the backend database.
+   */
+  const handleGoogleSignIn = async () => {
+    try {
+      // 1. Trigger Google popup sign-in via Firebase Auth
+      const result = await googleSignIn();
+      const user = result.user;
+
+      // 2. Extract essential user details from Google provider response
+      const userInfo = {
+        email: user.email,
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+      };
+
+      // 3. Send or sync user data with the backend database
+      const res = await axiosSecure.post("/users", userInfo);
+
+      // 4. Log server message and navigate to home page on success
+      if (res.data.insertedId || res.data.exists) {
+        console.log("Success:", res.data.message);
+        navigate("/");
+      }
+    } catch (err) {
+      console.error("Google Sign-In process failed:", err.message);
+    }
   };
 
   return (
@@ -104,7 +155,10 @@ const Register = () => {
         </p>
         <p className="my-2 text-gray-300 text-center ">or</p>
 
-        <button className="btn w-full bg-white text-black border-[#e5e5e5]">
+        <button
+          className="btn w-full bg-white text-black border-[#e5e5e5]"
+          onClick={handleGoogleSignIn}
+        >
           <svg
             aria-label="Google logo"
             width="16"
