@@ -37,7 +37,7 @@ const DashbordLayout = () => {
                 <path d="M14 10l2 2l-2 2"></path>
               </svg>
             </label>
-            <div className="px-4">
+            <div className="px-4 is-drawer-open:hidden ">
               <Logo />
             </div>
           </nav>
@@ -53,6 +53,10 @@ const DashbordLayout = () => {
           ></label>
           <div className="flex min-h-full flex-col items-start bg-base-200 is-drawer-close:w-14 is-drawer-open:w-64">
             {/* Sidebar content here */}
+            <div className="px-4 is-drawer-close:hidden ">
+              <Logo />
+            </div>
+
             <ul className="menu w-full grow">
               {/* List item */}
               <li>
@@ -76,6 +80,15 @@ const DashbordLayout = () => {
                     <path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                   </svg>
                   <span className="is-drawer-close:hidden">Homepage</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to={"/dashbord/Approve-riders"}
+                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  data-tip="Approve Riders"
+                >
+                  <span className="is-drawer-close:hidden">Approve Riders</span>
                 </Link>
               </li>
               <li>

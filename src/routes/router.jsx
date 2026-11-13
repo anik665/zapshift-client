@@ -19,6 +19,7 @@ import Service from "../pages/service/Service";
 import Contact from "../pages/Contact/Contact";
 import Pricing from "../pages/Pricing/Pricing";
 import PaymentHistory from "../pages/Dashbords/PaymetHistory/PaymentHistory";
+import AppropeRiders from "../pages/Dashbords/AppropeRiders/AppropeRiders";
 
 export const router = createBrowserRouter([
   {
@@ -87,6 +88,7 @@ export const router = createBrowserRouter([
       { path: "payment/:ParcelId", Component: Payment },
       { path: "payment-success", Component: PaymentSuccess },
       { path: "payment-cancel", Component: PaymentCancel },
+      { path: "approve-riders", Component: AppropeRiders },
     ],
   },
 ]);

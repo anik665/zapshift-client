@@ -3,6 +3,7 @@ import { useForm, useWatch } from "react-hook-form";
 import { useLoaderData, useNavigate } from "react-router";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import Swal from "sweetalert2";
 
 const BeArider = () => {
   const {
@@ -21,9 +22,9 @@ const BeArider = () => {
   // ১. ইউনিক Region বের করা
   const regions = [...new Set(serviceCenter.map((r) => r.region))];
 
-  // ২. Form Inputs Watch করা
-  const selectedRegion = useWatch({ control, name: "senderRegion" });
-  const selectedDistrict = useWatch({ control, name: "senderDistrict" });
+  // ২. Form Inputs Watch করা (Fixed names to match register)
+  const selectedRegion = useWatch({ control, name: "riderRegion" });
+  const selectedDistrict = useWatch({ control, name: "riderDistrict" });
 
   // ৩. সিলেক্ট করা Region থেকে Filter করে District তালিকা বের করা
   const availableDistricts = serviceCenter
@@ -35,9 +36,9 @@ const BeArider = () => {
     .filter((item) => item.district === selectedDistrict)
     .flatMap((item) => item.covered_area);
 
-  // Region বদলালে District এবং Area রিসেট করা
+  // Region বদলালে District এবং Area রিসেট করা (Fixed field name)
   useEffect(() => {
-    setValue("senderDistrict", "");
+    setValue("riderDistrict", "");
     setValue("coveredArea", "");
   }, [selectedRegion, setValue]);
 
@@ -48,7 +49,18 @@ const BeArider = () => {
 
   const onSubmit = (data) => {
     console.log("Rider Application Data:", data);
-    // axiosSecure দিয়ে API Call করতে পারেন
+
+    axiosSecure.post("/rider", data).then((res) => {
+      if (res.data.insertedId) {
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Rider Application Submitted Successfully",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+    });
   };
 
   return (
@@ -87,12 +99,13 @@ const BeArider = () => {
                 </p>
               )}
             </div>
+
+            {/* Driving License Number */}
             <div>
               <label className="label mb-1 text-slate-900 font-medium block">
                 Driving License Number
               </label>
               <input
-                defaultValue={""}
                 type="text"
                 {...register("drivingLicenseNumber", {
                   required: "Driving License Number is required",
@@ -106,7 +119,8 @@ const BeArider = () => {
                 </p>
               )}
             </div>
-            //rider NID
+
+            {/* Rider NID */}
             <div>
               <label className="label mb-1 text-slate-900 font-medium block">
                 Rider NID
@@ -125,6 +139,7 @@ const BeArider = () => {
                 </p>
               )}
             </div>
+
             {/* Rider Email */}
             <div>
               <label className="label mb-1 text-slate-900 font-medium block">
@@ -146,6 +161,7 @@ const BeArider = () => {
                 </p>
               )}
             </div>
+
             {/* Rider Address */}
             <div>
               <label className="label mb-1 text-slate-900 font-medium block">
@@ -165,6 +181,7 @@ const BeArider = () => {
                 </p>
               )}
             </div>
+
             {/* Rider Phone */}
             <div>
               <label className="label mb-1 text-slate-900 font-medium block">
@@ -184,7 +201,8 @@ const BeArider = () => {
                 </p>
               )}
             </div>
-            {/* Sender Region */}
+
+            {/* Rider Region */}
             <div>
               <label className="label mb-1 text-slate-900 font-medium block">
                 Your Region
@@ -192,7 +210,7 @@ const BeArider = () => {
               <select
                 defaultValue=""
                 className="select w-full border rounded p-2"
-                {...register("senderRegion", {
+                {...register("riderRegion", {
                   required: "Please select your region",
                 })}
               >
@@ -205,13 +223,14 @@ const BeArider = () => {
                   </option>
                 ))}
               </select>
-              {errors.senderRegion && (
+              {errors.riderRegion && (
                 <p className="text-red-500 text-sm">
-                  {errors.senderRegion.message}
+                  {errors.riderRegion.message}
                 </p>
               )}
             </div>
-            {/* Sender District */}
+
+            {/* Rider District */}
             <div>
               <label className="label mb-1 text-slate-900 font-medium block">
                 Your District
@@ -220,7 +239,7 @@ const BeArider = () => {
                 defaultValue=""
                 disabled={!selectedRegion}
                 className="select w-full border rounded p-2 disabled:bg-gray-100"
-                {...register("RiderDistrict", {
+                {...register("riderDistrict", {
                   required: "Please select your district",
                 })}
               >
@@ -233,12 +252,13 @@ const BeArider = () => {
                   </option>
                 ))}
               </select>
-              {errors.RiderDistrict && (
+              {errors.riderDistrict && (
                 <p className="text-red-500 text-sm">
-                  {errors.RiderDistrict.message}
+                  {errors.riderDistrict.message}
                 </p>
               )}
             </div>
+
             {/* Rider Thana / Covered Area */}
             <div>
               <label className="label mb-1 text-slate-900 font-medium block">
@@ -267,6 +287,7 @@ const BeArider = () => {
                 </p>
               )}
             </div>
+
             {/* Pickup Instruction */}
             <div>
               <label className="label mb-1 text-slate-900 font-medium block">
@@ -278,6 +299,7 @@ const BeArider = () => {
                 className="textarea w-full border rounded p-2"
               />
             </div>
+
             <button
               type="submit"
               className="btn btn-primary mt-4 bg-teal-800 text-white px-6 py-2 rounded hover:bg-teal-900"
