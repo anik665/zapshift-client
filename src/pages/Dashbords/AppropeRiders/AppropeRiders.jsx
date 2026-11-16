@@ -20,9 +20,10 @@ const AppropeRiders = () => {
     console.log("approve the user", id);
 
     const updateInfo = {
-      starus: "approved",
+      status: "approved",
     };
     axioscecure.patch(`/rider/${id}`, updateInfo).then((res) => {
+      console.log(res.data);
       if (res.data.modifiedCount > 0) {
         Swal.fire({
           icon: "success",
@@ -35,7 +36,7 @@ const AppropeRiders = () => {
   const handleReject = (id) => {
     console.log("reject the user", id);
     const updateInfo = {
-      starus: "rejected",
+      status: "rejected",
     };
     axioscecure.patch(`/rider/${id}`, updateInfo).then((res) => {
       if (res.data.modifiedCount > 0) {
@@ -69,12 +70,19 @@ const AppropeRiders = () => {
           </thead>
           <tbody>
             {riders?.map((res, index) => (
-              <tr>
+              <tr key={res._id}>
                 <td>{index + 1}</td>
                 <td>{res.riderName}</td>
                 <td>{res.riderEmail}</td>
                 <td>{res.riderDistrict}</td>
-                <td>{res.starus}</td>{" "}
+
+                <td>
+                  <p
+                    className={`badge ${res.status === "approved" ? "badge-success" : res.status === "rejected" ? "badge-error" : "badge-warning"}`}
+                  >
+                    {res.status}
+                  </p>
+                </td>
                 <td>
                   <button
                     className="btn "
