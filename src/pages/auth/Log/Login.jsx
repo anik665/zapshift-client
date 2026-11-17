@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router";
 import useAuth from "../../../hooks/useAuth";
+import Swal from "sweetalert2";
 
 const Login = () => {
   const {
@@ -15,15 +16,37 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state || "/";
-  console.log(from);
+  // console.log(from);
 
   const onSubmit = (data) => {
-    console.log(data);
-    const email = data.email;
-    const password = data.password;
+    const { email, password } = data;
+
     signIn(email, password)
-      .then((res) => console.log(res.user))
-      .catch((err) => console.log(err.message));
+      .then((res) => {
+        Swal.fire({
+          icon: "success",
+          title: "Login Successful",
+          text: `Welcome back, ${res.user.displayName || res.user.email}!`,
+          timer: 1500,
+          showConfirmButton: false,
+        }).then(() => {
+          navigate(from, { replace: true });
+        });
+      })
+      .catch((err) => {
+        const message =
+          err.code === "auth/invalid-credential" ||
+          err.code === "auth/wrong-password" ||
+          err.code === "auth/user-not-found"
+            ? "Email or password is incorrect."
+            : "Something went wrong. Please try again.";
+
+        Swal.fire({
+          icon: "error",
+          title: "Login Failed",
+          text: message,
+        });
+      });
   };
 
   const GoogleSignIn = () => {

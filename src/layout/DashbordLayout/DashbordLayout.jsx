@@ -3,8 +3,13 @@ import { Link, Outlet } from "react-router";
 import My_Parcel from "../../pages/Dashbords/My_parcel/My_Parcel";
 import Logo from "../../components/logo/logo";
 import { MdOutlinePayment } from "react-icons/md";
+import { FaMotorcycle, FaTruckFast, FaUsers } from "react-icons/fa6";
+import useRole from "../../hooks/useRole";
 
 const DashbordLayout = () => {
+  const { role } = useRole();
+  console.log(role, "role");
+
   return (
     <div>
       <div className="drawer lg:drawer-open">
@@ -56,16 +61,14 @@ const DashbordLayout = () => {
             <div className="px-4 is-drawer-close:hidden ">
               <Logo />
             </div>
-
             <ul className="menu w-full grow">
-              {/* List item */}
+              {/* Homepage */}
               <li>
                 <Link
                   to={"/"}
                   className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
                   data-tip="Homepage"
                 >
-                  {/* Home icon */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -82,37 +85,89 @@ const DashbordLayout = () => {
                   <span className="is-drawer-close:hidden">Homepage</span>
                 </Link>
               </li>
-              <li>
-                <Link
-                  to={"/dashbord/Approve-riders"}
-                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  data-tip="Approve Riders"
-                >
-                  <span className="is-drawer-close:hidden">Approve Riders</span>
-                </Link>
-              </li>
+
+              {/** Rider-only links */}
+
+              {role === "rider" && (
+                <li>
+                  <Link
+                    to={"/dashbord/my-deliveries"}
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="My Deliveries"
+                  >
+                    <FaTruckFast className="my-1.5 inline-block size-4" />
+                    <span className="is-drawer-close:hidden">
+                      My Deliveries
+                    </span>
+                  </Link>
+                </li>
+              )}
+
+              {/* Admin-only links */}
+              {role === "admin" && (
+                <>
+                  {" "}
+                  <li>
+                    <Link
+                      to={"/dashbord/Approve-riders"}
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      data-tip="Approve Riders"
+                    >
+                      <FaMotorcycle className="my-1.5 inline-block size-4" />
+                      <span className="is-drawer-close:hidden">
+                        Approve Riders
+                      </span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to={"/dashbord/user-management"}
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      data-tip="User Management"
+                    >
+                      <FaUsers className="my-1.5 inline-block size-4" />
+                      <span className="is-drawer-close:hidden">
+                        User Management
+                      </span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to={"/dashbord/assign-rider"}
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      data-tip="Assign Rider"
+                    >
+                      <FaMotorcycle className="my-1.5 inline-block size-4" />
+                      <span className="is-drawer-close:hidden">
+                        Assign Rider
+                      </span>
+                    </Link>
+                  </li>
+                </>
+              )}
+
+              {/* User Management */}
+
+              {/* Payment History */}
               <li>
                 <Link
                   to={"/dashbord/payment-history"}
                   className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
                   data-tip="Payment History"
                 >
-                  {/* Payment History icon */}
-
-                  <MdOutlinePayment />
+                  <MdOutlinePayment className="my-1.5 inline-block size-4" />
                   <span className="is-drawer-close:hidden">
                     Payment History
                   </span>
                 </Link>
               </li>
 
-              {/* List item */}
+              {/* Settings */}
               <li>
                 <button
                   className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
                   data-tip="Settings"
                 >
-                  {/* Settings icon */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"

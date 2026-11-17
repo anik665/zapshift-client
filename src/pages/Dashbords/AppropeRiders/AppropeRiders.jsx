@@ -5,54 +5,48 @@ import { IoPersonRemoveSharp } from "react-icons/io5";
 import { FaTrashCan, FaUserCheck } from "react-icons/fa6";
 import Swal from "sweetalert2";
 
-const AppropeRiders = () => {
-  const axioscecure = useAxiosSecure();
+const ApproveRiders = () => {
+  const axiossecure = useAxiosSecure();
 
-  const { data: riders } = useQuery({
+  const { refetch, data: riders } = useQuery({
     queryKey: ["riders"],
     queryFn: async () => {
-      const res = await axioscecure.get("/rider");
-
+      const res = await axiossecure.get("/rider");
       return res.data;
     },
   });
-  const handleApprove = (id) => {
-    console.log("approve the user", id);
+
+  // Unified function to handle both approve and reject status updates with email
+  const handleUpdateStatus = (id, status, email) => {
+    const actionText = status === "approved" ? "approved" : "rejected";
 
     const updateInfo = {
-      status: "approved",
+      status: status,
+      email: email, // Passing email along with status
     };
-    axioscecure.patch(`/rider/${id}`, updateInfo).then((res) => {
+
+    axiossecure.patch(`/rider/${id}`, updateInfo).then((res) => {
       console.log(res.data);
       if (res.data.modifiedCount > 0) {
+        refetch(); // Refresh the riders list
         Swal.fire({
           icon: "success",
-          title: "Rider Approved",
-          text: "The rider has been approved successfully.",
+          title: `Rider ${actionText.charAt(0).toUpperCase() + actionText.slice(1)}`,
+          text: `The rider has been ${actionText} successfully.`,
         });
       }
     });
   };
-  const handleReject = (id) => {
-    console.log("reject the user", id);
-    const updateInfo = {
-      status: "rejected",
-    };
-    axioscecure.patch(`/rider/${id}`, updateInfo).then((res) => {
-      if (res.data.modifiedCount > 0) {
-        Swal.fire({
-          icon: "success",
-          title: "Rider Rejected",
-          text: "The rider has been rejected successfully.",
-        });
-      }
-    });
+
+  const handleDelete = (id) => {
+    // Add delete logic here if needed
+    console.log("delete rider", id);
   };
 
   return (
     <>
       <div>
-        <h1 className=" text-5xl "> Approve Riders</h1>
+        <h1 className="text-5xl font-bold mb-6">Approve Riders</h1>
       </div>
 
       <div className="overflow-x-auto">
@@ -69,36 +63,65 @@ const AppropeRiders = () => {
             </tr>
           </thead>
           <tbody>
-            {riders?.map((res, index) => (
-              <tr key={res._id}>
+            {riders?.map((rider, index) => (
+              <tr key={rider._id}>
                 <td>{index + 1}</td>
-                <td>{res.riderName}</td>
-                <td>{res.riderEmail}</td>
-                <td>{res.riderDistrict}</td>
+                <td>{rider.riderName}</td>
+                <td>{rider.riderEmail}</td>
+                <td>{rider.riderDistrict}</td>
 
                 <td>
                   <p
-                    className={`badge ${res.status === "approved" ? "badge-success" : res.status === "rejected" ? "badge-error" : "badge-warning"}`}
+                    className={`badge ${
+                      rider.status === "approved"
+                        ? "badge-success"
+                        : rider.status === "rejected"
+                          ? "badge-error"
+                          : "badge-warning"
+                    }`}
                   >
-                    {res.status}
+                    {rider.status || "pending"}
                   </p>
                 </td>
-                <td>
+                <td className="space-x-2">
+                  {/* Approve Button */}
                   <button
-                    className="btn "
-                    onClick={() => handleApprove(res._id)}
+                    className="btn btn-sm btn-success text-white"
+                    onClick={() =>
+                      handleUpdateStatus(
+                        rider._id,
+                        "approved",
+                        rider.riderEmail,
+                      )
+                    }
+                    title="Approve Rider"
                   >
                     <FaUserCheck />
                   </button>
+
+                  {/* Reject Button */}
                   <button
-                    className="btn "
-                    onClick={() => handleReject(res._id)}
+                    className="btn btn-sm btn-error text-white"
+                    onClick={() =>
+                      handleUpdateStatus(
+                        rider._id,
+                        "rejected",
+                        rider.riderEmail,
+                      )
+                    }
+                    title="Reject Rider"
                   >
                     <IoPersonRemoveSharp />
-                  </button>{" "}
-                  <button className="btn ">
+                  </button>
+
+                  {/* Delete Button */}
+                  <button
+                    className="btn btn-sm btn-ghost text-red-500"
+                    onClick={() => handleDelete(rider._id)}
+                    title="Delete Rider"
+                  >
                     <FaTrashCan />
-                  </button>{" "}
+                  </button>
                 </td>
               </tr>
             ))}
@@ -109,4 +132,4 @@ const AppropeRiders = () => {
   );
 };
 
-export default AppropeRiders;
+export default ApproveRiders;

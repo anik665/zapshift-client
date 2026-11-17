@@ -81,6 +81,8 @@ const My_Parcel = () => {
               <th>Cost</th>
               <th>Created At</th>
               <th>Payment</th>
+              <th>Delivery Status</th>
+
               <th>Action</th>
             </tr>
           </thead>
@@ -106,6 +108,7 @@ const My_Parcel = () => {
                     </button>
                   )}
                 </td>
+                <td>{p.deliveryStatus}</td>
                 <td>
                   <button className="btn btn-square hover:bg-primary ">
                     <FiEdit />

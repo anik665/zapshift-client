@@ -20,6 +20,13 @@ import Contact from "../pages/Contact/Contact";
 import Pricing from "../pages/Pricing/Pricing";
 import PaymentHistory from "../pages/Dashbords/PaymetHistory/PaymentHistory";
 import AppropeRiders from "../pages/Dashbords/AppropeRiders/AppropeRiders";
+import UserManagement from "../pages/Dashbords/userManagements/UserManagement";
+import Forbidden from "../components/Forbidden";
+import AdminRoute from "./AdminRoutes";
+import AssignRider from "../pages/Dashbords/Assignrider/Assignrider";
+import RiderRoute from "./RiderRoutes";
+import Mydeliveris from "../pages/Dashbords/mydeliveris/Mydeliveris";
+// import UserManagement from " ../pages/Dashbords/userManagements/UserManagement";
 
 export const router = createBrowserRouter([
   {
@@ -58,6 +65,10 @@ export const router = createBrowserRouter([
       { path: "contact", Component: Contact },
       { path: "pricing", Component: Pricing },
       { path: "about", Component: AboutUs },
+      {
+        path: "/forbidden",
+        element: <Forbidden />,
+      },
     ],
   },
   {
@@ -89,6 +100,31 @@ export const router = createBrowserRouter([
       { path: "payment-success", Component: PaymentSuccess },
       { path: "payment-cancel", Component: PaymentCancel },
       { path: "approve-riders", Component: AppropeRiders },
+      {
+        path: "my-deliveries",
+        element: (
+          <RiderRoute>
+            {" "}
+            <Mydeliveris />{" "}
+          </RiderRoute>
+        ),
+      },
+      {
+        path: "user-management",
+        element: (
+          <AdminRoute>
+            <UserManagement />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "assign-rider",
+        element: (
+          <AdminRoute>
+            <AssignRider />
+          </AdminRoute>
+        ),
+      },
     ],
   },
 ]);
