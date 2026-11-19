@@ -26,6 +26,8 @@ import AdminRoute from "./AdminRoutes";
 import AssignRider from "../pages/Dashbords/Assignrider/Assignrider";
 import RiderRoute from "./RiderRoutes";
 import Mydeliveris from "../pages/Dashbords/mydeliveris/Mydeliveris";
+import ParcelTrack from "../pages/parcelTrack/ParcelTrack";
+import DashbordHome from "../pages/Dashbords/DashbordHome/DashbordHome";
 // import UserManagement from " ../pages/Dashbords/userManagements/UserManagement";
 
 export const router = createBrowserRouter([
@@ -65,6 +67,8 @@ export const router = createBrowserRouter([
       { path: "contact", Component: Contact },
       { path: "pricing", Component: Pricing },
       { path: "about", Component: AboutUs },
+      { path: "parcel-track/:trackingId", Component: ParcelTrack },
+      { path: "parcel-track", Component: ParcelTrack },
       {
         path: "/forbidden",
         element: <Forbidden />,
@@ -87,6 +91,7 @@ export const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
+      { index: true, Component: DashbordHome },
       {
         path: "my-parcel",
         element: (

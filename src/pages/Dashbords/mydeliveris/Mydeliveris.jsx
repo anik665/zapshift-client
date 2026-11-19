@@ -110,8 +110,8 @@ const Mydeliveris = () => {
   });
 
   const actionMutation = useMutation({
-    mutationFn: ({ id, action }) =>
-      axiosSecure.patch(`/parcel/${id}/rider-action`, { action }),
+    mutationFn: ({ id, trackingId, action }) =>
+      axiosSecure.patch(`/parcel/${id}/rider-action`, { action, trackingId }),
     onSuccess: (res, { doneText }) => {
       queryClient.invalidateQueries({ queryKey: ["my-deliveries"] });
       if (res.data.modifiedCount > 0) {
@@ -150,6 +150,7 @@ const Mydeliveris = () => {
       if (result.isConfirmed) {
         actionMutation.mutate({
           id: parcel._id,
+          trackingId: parcel.trackingId,
           action: act.key,
           doneText: act.done,
         });

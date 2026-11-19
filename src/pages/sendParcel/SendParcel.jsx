@@ -337,6 +337,9 @@ const SendParcel = () => {
                   required: "Please select your regions",
                 })}
               >
+                <option value="" disabled>
+                  Pick an region
+                </option>
                 {region?.map((r, index) => (
                   <option
                     key={index}
@@ -361,8 +364,9 @@ const SendParcel = () => {
                   required: "Please select your district",
                 })}
               >
-                {/* ❌ তোমার আগের code-এ "Pick a color" ছিল।
-                    এখানে district-এর জন্য proper placeholder দেওয়া হয়েছে। */}
+                <option value="" disabled>
+                  Pick an district
+                </option>
                 {district?.map((district, index) => (
                   <option key={index} value={district}>
                     {district}
@@ -384,6 +388,9 @@ const SendParcel = () => {
                 })}
                 className="select w-full"
               >
+                <option value="" disabled>
+                  Pick an Area
+                </option>
                 {area.map((a) => (
                   <option key={a} value={a}>
                     {a}
@@ -479,6 +486,9 @@ const SendParcel = () => {
                   required: "Please select reciver regioin",
                 })}
               >
+                <option value="" disabled>
+                  Pick an Region
+                </option>
                 {region.map((r) => (
                   <option>{r}</option>
                 ))}
@@ -499,6 +509,9 @@ const SendParcel = () => {
                 {/* {information.map((district) => (
                   <option value={district.district}>{district.district}</option>
                 ))} */}
+                <option value="" disabled>
+                  Pick an District
+                </option>
                 {receviorDistrict.map((d) => (
                   <option>{d}</option>
                 ))}

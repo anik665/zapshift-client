@@ -5,10 +5,11 @@ import Logo from "../../components/logo/logo";
 import { MdOutlinePayment } from "react-icons/md";
 import { FaMotorcycle, FaTruckFast, FaUsers } from "react-icons/fa6";
 import useRole from "../../hooks/useRole";
+import logoImg from "../../assets/logo.png";
 
 const DashbordLayout = () => {
   const { role } = useRole();
-  console.log(role, "role");
+  // console.log(role, "role");
 
   return (
     <div>
@@ -58,14 +59,17 @@ const DashbordLayout = () => {
           ></label>
           <div className="flex min-h-full flex-col items-start bg-base-200 is-drawer-close:w-14 is-drawer-open:w-64">
             {/* Sidebar content here */}
-            <div className="px-4 is-drawer-close:hidden ">
-              <Logo />
-            </div>
+            <div className="px-4 is-drawer-close:hidden "></div>
             <ul className="menu w-full grow">
               {/* Homepage */}
               <li>
+                <Link to={"/"}>
+                  <img src={logoImg} alt="" />
+                </Link>
+              </li>
+              <li>
                 <Link
-                  to={"/"}
+                  to={"/dashbord"}
                   className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
                   data-tip="Homepage"
                 >

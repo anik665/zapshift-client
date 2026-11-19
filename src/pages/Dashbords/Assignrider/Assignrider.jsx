@@ -7,6 +7,7 @@ const AssignRider = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const [selectedParcel, setSelectedParcel] = useState(null);
+  console.log(selectedParcel, "selected parcel");
 
   // Paid parcels without a rider
   const { data: parcels = [], isLoading } = useQuery({
@@ -33,8 +34,9 @@ const AssignRider = () => {
   });
 
   const assignMutation = useMutation({
-    mutationFn: ({ parcelId, rider }) =>
+    mutationFn: ({ parcelId, trackingId, rider }) =>
       axiosSecure.patch(`/parcel/${parcelId}/assign`, {
+        trackingId,
         riderId: rider._id,
         riderName: rider.riderName,
         riderEmail: rider.riderEmail,
@@ -77,7 +79,12 @@ const AssignRider = () => {
       confirmButtonText: "Yes, assign",
     }).then((result) => {
       if (result.isConfirmed) {
-        assignMutation.mutate({ parcelId: selectedParcel._id, rider });
+        assignMutation.mutate({
+          parcelId: selectedParcel._id,
+          trackingId: selectedParcel.trackingId,
+
+          rider,
+        });
       }
     });
   };

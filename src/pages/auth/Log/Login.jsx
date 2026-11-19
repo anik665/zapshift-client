@@ -23,15 +23,15 @@ const Login = () => {
 
     signIn(email, password)
       .then((res) => {
+        navigate(from, { replace: true });
+
         Swal.fire({
           icon: "success",
           title: "Login Successful",
           text: `Welcome back, ${res.user.displayName || res.user.email}!`,
           timer: 1500,
           showConfirmButton: false,
-        }).then(() => {
-          navigate(from, { replace: true });
-        });
+        }).then(() => {});
       })
       .catch((err) => {
         const message =
@@ -52,19 +52,35 @@ const Login = () => {
   const GoogleSignIn = () => {
     googleSignIn()
       .then((res) => {
-        console.log(res.user);
-        alert("Your SignIn Is Complete");
+        // console.log(res.user);
         navigate(from);
+        Swal.fire({
+          icon: "success",
+          title: "Login Successful",
+          text: `Welcome back, ${res.user.displayName || res.user.email}!`,
+          timer: 1500,
+          showConfirmButton: false,
+        });
       })
       .catch((err) => {
-        console.log(err.message);
-        alert("You cannot sign In");
+        // console.log(err.message);
+        const message =
+          err.code === "auth/invalid-credential" ||
+          err.code === "auth/wrong-password" ||
+          err.code === "auth/user-not-found"
+            ? "Email or password is incorrect."
+            : "Something went wrong. Please try again.";
+        Swal.fire({
+          icon: "error",
+          title: "Login Failed",
+          text: message,
+        });
       });
   };
 
   // console.log(watch()); // watch input value by passing the name of it
-  console.log("Clude name ", import.meta.env.VITE_CLOUDINARY_CLOUD_NAME);
-  console.log(import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
+  // console.log("Clude name ", import.meta.env.VITE_CLOUDINARY_CLOUD_NAME);
+  // console.log(import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
 
   return (
     <div className="mt-7 pt-2 card bg-base-100 rounded shrink-0 mx-auto max-w-sm w-full shadow-2xl  ">

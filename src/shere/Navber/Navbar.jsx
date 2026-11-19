@@ -3,6 +3,7 @@ import Logo from "../../components/logo/logo";
 import { Link, NavLink } from "react-router";
 import { MdArrowOutward } from "react-icons/md";
 import useAuth from "../../hooks/useAuth";
+import Swal from "sweetalert2";
 
 const Navbar = () => {
   const { user, loading, Logout } = useAuth();
@@ -10,7 +11,13 @@ const Navbar = () => {
   const handelLogOut = () => {
     Logout()
       .then((res) => {
-        alert("Logout SuccessFull");
+        Swal.fire({
+          icon: "success",
+          title: "Logout Successful",
+
+          timer: 1500,
+          showConfirmButton: false,
+        });
       })
       .catch((err) => console.log(err.message));
   };
@@ -29,10 +36,10 @@ const Navbar = () => {
         {" "}
         <NavLink to={"/about"}>About us </NavLink>{" "}
       </li>
-      <li>
+      {/* <li>
         {" "}
         <NavLink to={"/rider"}>Be a Rider </NavLink>{" "}
-      </li>
+      </li> */}
       <li>
         {" "}
         <NavLink to={"/sendParcel"}>Send-Parcel</NavLink>{" "}
@@ -46,10 +53,16 @@ const Navbar = () => {
         <NavLink to={"contact"}>Contact </NavLink>{" "}
       </li>
       {user && (
-        <li>
-          {" "}
-          <NavLink to={"dashbord/my-parcel"}>My Parcel </NavLink>{" "}
-        </li>
+        <>
+          <li>
+            {" "}
+            <NavLink to={"dashbord/my-parcel"}>My Parcel </NavLink>{" "}
+          </li>
+          <li>
+            {" "}
+            <NavLink to={"/dashbord"}>Dashbord</NavLink>{" "}
+          </li>
+        </>
       )}
     </>
   );
@@ -94,14 +107,14 @@ const Navbar = () => {
             <>
               <button
                 onClick={handelLogOut}
-                className=" bg-white border-gray-700  text-[20px] font-bold px-4 lg:px-8 py-2 lg:py-4  shadow-lg   rounded-lg"
+                className=" bg-white border-gray-700  text-[16px] font-bold px-4 lg:px-8 py-2 lg:py-4  shadow-lg   rounded-lg"
               >
                 Sign Out
               </button>
               <div className="flex gap-2 items-end">
                 <Link
                   to={"/rider"}
-                  className="bg-primary font-bold text-[20px]   px-4 lg:px-8 py-2 lg:py-4  rounded-lg mr-2"
+                  className="bg-primary font-bold text-[16px]   px-4 lg:px-8 py-2 lg:py-4  rounded-lg "
                 >
                   Be a rider
                 </Link>
